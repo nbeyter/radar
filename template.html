@@ -1,0 +1,449 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Perakende Elektrik Radarı</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #F2F6F6;
+    --surface: #FFFFFF;
+    --surface-2: #E7EEED;
+    --ink: #142226;
+    --ink-soft: #4C6169;
+    --line: #D2DEDC;
+    --line-strong: #B7C7C5;
+
+    --accent: #BE6A2E;        /* copper / live-wire */
+    --accent-ink: #7A431A;
+    --accent-soft: #F3E2CE;
+
+    --accent2: #1F6E82;       /* grid blue */
+    --accent2-ink: #14505F;
+    --accent2-soft: #DBEBEE;
+
+    --good: #3F7D53;
+    --good-soft: #DEEBE1;
+    --caution: #8A6A16;
+    --caution-soft: #F1E7C9;
+    --info: #5C5590;
+    --info-soft: #E5E3F1;
+
+    --shadow: 0 1px 2px rgba(20,34,38,.06), 0 8px 24px -12px rgba(20,34,38,.18);
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0E1A1C;
+      --surface: #142526;
+      --surface-2: #1B2E30;
+      --ink: #E9F1F0;
+      --ink-soft: #9BB3B2;
+      --line: #294143;
+      --line-strong: #3A5457;
+
+      --accent: #E08A46;
+      --accent-ink: #F6CDA2;
+      --accent-soft: #3A2A18;
+
+      --accent2: #5FC2D6;
+      --accent2-ink: #BEE9F1;
+      --accent2-soft: #163338;
+
+      --good: #6FBE87;
+      --good-soft: #163726;
+      --caution: #D8B84C;
+      --caution-soft: #372E11;
+      --info: #A6A0DE;
+      --info-soft: #262148;
+
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+
+  :root[data-theme="dark"]{
+    --bg: #0E1A1C;
+    --surface: #142526;
+    --surface-2: #1B2E30;
+    --ink: #E9F1F0;
+    --ink-soft: #9BB3B2;
+    --line: #294143;
+    --line-strong: #3A5457;
+
+    --accent: #E08A46;
+    --accent-ink: #F6CDA2;
+    --accent-soft: #3A2A18;
+
+    --accent2: #5FC2D6;
+    --accent2-ink: #BEE9F1;
+    --accent2-soft: #163338;
+
+    --good: #6FBE87;
+    --good-soft: #163726;
+    --caution: #D8B84C;
+    --caution-soft: #372E11;
+    --info: #A6A0DE;
+    --info-soft: #262148;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ background: var(--bg); }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Public Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family: 'Barlow Semi Condensed', ui-sans-serif, system-ui, sans-serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono{ font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+  a{ color: var(--accent2-ink); text-decoration-color: var(--line-strong); text-underline-offset: 2px; }
+  a:hover{ text-decoration-color: currentColor; }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--accent2); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .masthead::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: .35;
+    mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  }
+  .masthead-inner{
+    position: relative;
+    max-width: 1180px; margin: 0 auto;
+    padding: 40px 24px 28px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+    color: var(--accent-ink); background: var(--accent-soft);
+    padding: 5px 10px; border-radius: 100px;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); flex:none; }
+  h1.title{
+    margin-top: 14px;
+    font-size: clamp(30px, 4.6vw, 46px);
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .subtitle{
+    margin-top: 10px;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+  .meta-row{
+    margin-top: 22px;
+    display:flex; flex-wrap:wrap; gap: 10px 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px; color: var(--ink-soft);
+  }
+  .meta-row b{ color: var(--ink); font-weight: 600; }
+
+  /* ---------- Section shell ---------- */
+  section{ margin-top: 44px; }
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+  .section-head h2{
+    font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color: var(--ink-soft);
+  }
+
+  /* ---------- Insights ---------- */
+  .insights{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .insight{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 16px 14px;
+  }
+  .insight .n{
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:800; font-size: 13px;
+    color: var(--accent-ink);
+    letter-spacing: .04em;
+  }
+  .insight p{ margin: 8px 0 0; font-size: 14px; color: var(--ink); }
+  @media (max-width: 980px){ .insights{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px){ .insights{ grid-template-columns: 1fr; } }
+
+  /* ---------- Feed columns ---------- */
+  .feed-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 36px;
+    position: relative;
+  }
+  .feed-grid::before{
+    content:"";
+    position:absolute; top:0; bottom:0; left:50%;
+    width:1px; background: var(--line);
+  }
+  @media (max-width: 860px){
+    .feed-grid{ grid-template-columns: 1fr; gap: 40px 0; }
+    .feed-grid::before{ display:none; }
+  }
+
+  .region-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 16px;
+  }
+  .region-head .swatch{ width:10px; height:10px; border-radius:2px; flex:none; }
+  .region-head h3{ font-size: 19px; font-weight:700; }
+  .region-head .tag-count{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:12px; color: var(--ink-soft); }
+
+  .card-list{ display:flex; flex-direction:column; gap:12px; }
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--card-accent, var(--line-strong));
+    border-radius: var(--radius);
+    padding: 14px 16px 15px;
+    box-shadow: var(--shadow);
+  }
+  .card-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    flex-wrap: wrap;
+  }
+  .card-org{ font-weight:700; font-size: 15px; color: var(--ink); }
+  .card-date{
+    font-family:'IBM Plex Mono',monospace; font-size: 11.5px; color: var(--ink-soft);
+    white-space: nowrap; padding-top:2px;
+  }
+  .pill{
+    display:inline-block;
+    font-size: 11px; font-weight:600; letter-spacing:.03em;
+    padding: 3px 9px; border-radius: 100px;
+    margin: 7px 0 8px;
+  }
+  .pill.product{ background: var(--accent-soft); color: var(--accent-ink); }
+  .pill.reg{ background: var(--accent2-soft); color: var(--accent2-ink); }
+  .pill.campaign{ background: var(--good-soft); color: var(--good); }
+  .pill.analysis{ background: var(--info-soft); color: var(--info); }
+
+  .card h4{
+    margin: 0 0 5px;
+    font-family:'Public Sans', sans-serif;
+    font-size: 15px; font-weight: 700; color: var(--ink);
+  }
+  .card p{ margin: 0; font-size: 13.7px; color: var(--ink-soft); }
+  .card .src{
+    display:inline-flex; align-items:center; gap:4px;
+    margin-top: 9px; font-size: 12.5px; font-weight:600;
+  }
+  .card .src::after{ content:"→"; transition: transform .15s ease; }
+  .card .src:hover::after{ transform: translateX(2px); }
+
+  /* ---------- Trend panel ---------- */
+  .trend-panel{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px 24px;
+    box-shadow: var(--shadow);
+  }
+  .trend-grid{ display:grid; grid-template-columns: 1.1fr 1fr; gap: 30px; }
+  @media (max-width: 860px){ .trend-grid{ grid-template-columns: 1fr; } }
+
+  .bigstat{ display:flex; align-items:baseline; gap: 14px; flex-wrap:wrap; }
+  .bigstat .num{ font-family:'Barlow Semi Condensed',sans-serif; font-weight:800; font-size: 44px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bigstat .arrow{ color: var(--ink-soft); font-size: 22px; }
+  .bigstat .cagr{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color: var(--good); background: var(--good-soft); padding: 4px 10px; border-radius: 100px;
+  }
+  .trend-panel p.lead{ margin: 10px 0 0; color: var(--ink-soft); font-size: 13.8px; max-width: 46ch; }
+
+  .bars{ display:flex; flex-direction:column; gap: 14px; }
+  .bar-row .bar-label{
+    display:flex; justify-content:space-between; font-size: 12.8px; margin-bottom: 5px;
+  }
+  .bar-row .bar-label b{ font-weight:600; color: var(--ink); }
+  .bar-row .bar-label span{ color: var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
+  .bar-track{ height: 8px; border-radius: 100px; background: var(--surface-2); overflow:hidden; }
+  .bar-fill{ height: 100%; border-radius: 100px; background: var(--accent2); }
+  .bar-fill.alt{ background: var(--accent); }
+
+  .players{
+    margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line);
+    display:flex; flex-wrap:wrap; gap: 8px;
+  }
+  .players .tag{
+    font-family:'IBM Plex Mono',monospace; font-size: 11.5px;
+    border: 1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 4px 9px; border-radius: 6px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top: 52px; padding-top: 20px; border-top: 1px solid var(--line);
+    color: var(--ink-soft); font-size: 12.5px;
+  }
+  footer .foot-grid{ display:flex; justify-content:space-between; gap: 20px; flex-wrap:wrap; }
+  footer a{ color: var(--ink-soft); }
+  .refresh-note{
+    margin-top:18px; padding: 12px 14px;
+    background: var(--surface-2); border-radius: 8px;
+    font-size: 12.8px; color: var(--ink-soft);
+    max-width: 78ch;
+  }
+
+  /* ---------- Archive ---------- */
+  .archive-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .archive-item{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    background: var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding: 10px 14px;
+  }
+  .archive-item .ed{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:600;
+    color: var(--accent-ink); background: var(--accent-soft);
+    padding:2px 8px; border-radius:100px; flex:none;
+  }
+  .archive-item .period{ font-weight:600; font-size:13.8px; color:var(--ink); }
+  .archive-item a{ margin-left:auto; font-size:13px; font-weight:600; white-space:nowrap; }
+  .archive-empty{
+    font-size:13.5px; color:var(--ink-soft); font-style:italic;
+    border:1px dashed var(--line-strong); border-radius:8px; padding:12px 14px;
+  }
+</style>
+
+<div id="edition-meta" data-edition="%%EDITION%%" data-period-start="%%PERIOD_START%%" data-period-end="%%PERIOD_END%%" data-published="%%PUBLISHED%%" hidden></div>
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="eyebrow"><span class="dot"></span>Perakende Elektrik &middot; Rekabet Takibi</span>
+    <h1 class="title">Piyasa Radarı</h1>
+    <p class="subtitle">Türkiye ve global perakende elektrik tedarikçilerinin yeni ürün, hizmet, tarife ve düzenleme hareketlerinin haftalık özeti — üst yönetim bilgilendirmesi için hazırlanmıştır.</p>
+    <div class="meta-row">
+      <span>DÖNEM &nbsp;<b>%%PERIOD_LABEL%%</b></span>
+      <span>KAPSAM &nbsp;<b>Türkiye + Global öncüler</b></span>
+      <span>İZLENEN GELİŞME &nbsp;<b>%%RECORD_COUNT%%</b></span>
+      <span>SONRAKİ GÜNCELLEME &nbsp;<b>Haftalık</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="insights">
+    <div class="section-head">
+      <h2>Bu Haftanın Çıkarımları</h2>
+    </div>
+    <div class="insights">
+%%INSIGHTS_HTML%%
+    </div>
+  </section>
+
+  <section id="feed">
+    <div class="section-head">
+      <h2>Şirket ve Kurum Hareketleri</h2>
+      <span class="count">%%RECORD_COUNT%% kayıt &middot; en yeniden eskiye</span>
+    </div>
+
+    <div class="feed-grid">
+      <div class="feed-col">
+        <div class="region-head">
+          <span class="swatch" style="background:var(--accent)"></span>
+          <h3>Türkiye</h3>
+          <span class="tag-count">%%TR_COUNT%% kayıt</span>
+        </div>
+        <div class="card-list">
+%%TR_CARDS_HTML%%
+        </div>
+      </div>
+
+      <div class="feed-col">
+        <div class="region-head">
+          <span class="swatch" style="background:var(--accent2)"></span>
+          <h3>Global</h3>
+          <span class="tag-count">%%GLOBAL_COUNT%% kayıt</span>
+        </div>
+        <div class="card-list">
+%%GLOBAL_CARDS_HTML%%
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trend">
+    <div class="section-head">
+      <h2>Pazar Görünümü — %%TREND_YEAR_RANGE%%</h2>
+    </div>
+    <div class="trend-panel">
+      <div class="trend-grid">
+        <div>
+          <div class="bigstat">
+            <span class="num">%%TREND_FROM%%</span>
+            <span class="arrow">→</span>
+            <span class="num">%%TREND_TO%%</span>
+            <span class="cagr">YBBO %%TREND_CAGR%%</span>
+          </div>
+          <p class="lead">%%TREND_LEAD%%</p>
+          <div class="players">
+%%TREND_PLAYERS_HTML%%
+          </div>
+        </div>
+        <div class="bars">
+%%TREND_BARS_HTML%%
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="archive">
+    <div class="section-head">
+      <h2>Önceki Sayılar</h2>
+      <span class="count">%%ARCHIVE_COUNT_LABEL%%</span>
+    </div>
+    <ul id="archive-list" class="archive-list">
+%%ARCHIVE_LIST_HTML%%
+    </ul>
+  </section>
+
+  <footer>
+    <div class="refresh-note">
+%%FOOTER_NOTE%%
+    </div>
+    <div class="foot-grid" style="margin-top:16px;">
+      <span>Yepas için hazırlandı &middot; İç kullanım</span>
+      <span>%%FOOTER_SOURCES%%</span>
+    </div>
+  </footer>
+
+</div>
+
+</body></html>

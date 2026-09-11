@@ -25,9 +25,9 @@ import re
 import sys
 from datetime import date, datetime, timedelta
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 INDEX_PATH = os.path.join(REPO_ROOT, "index.html")
-TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template.html")
+TEMPLATE_PATH = os.path.join(REPO_ROOT, "template.html")
 ARCHIVE_DIR = os.path.join(REPO_ROOT, "archive")
 
 # Docs'a göre güncel bir sürüm; bozulursa docs.claude.com/en/docs/about-claude/models

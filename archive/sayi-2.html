@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Türkiye ve global perakende elektrik tedarikçilerinin haftalık yeni ürün, tarife ve düzenleme takibi.">
+<title>Perakende Elektrik Radarı</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #F2F6F6;
+    --surface: #FFFFFF;
+    --surface-2: #E7EEED;
+    --ink: #142226;
+    --ink-soft: #4C6169;
+    --line: #D2DEDC;
+    --line-strong: #B7C7C5;
+
+    --accent: #BE6A2E;        /* copper / live-wire */
+    --accent-ink: #7A431A;
+    --accent-soft: #F3E2CE;
+
+    --accent2: #1F6E82;       /* grid blue */
+    --accent2-ink: #14505F;
+    --accent2-soft: #DBEBEE;
+
+    --good: #3F7D53;
+    --good-soft: #DEEBE1;
+    --caution: #8A6A16;
+    --caution-soft: #F1E7C9;
+    --info: #5C5590;
+    --info-soft: #E5E3F1;
+
+    --shadow: 0 1px 2px rgba(20,34,38,.06), 0 8px 24px -12px rgba(20,34,38,.18);
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0E1A1C;
+      --surface: #142526;
+      --surface-2: #1B2E30;
+      --ink: #E9F1F0;
+      --ink-soft: #9BB3B2;
+      --line: #294143;
+      --line-strong: #3A5457;
+
+      --accent: #E08A46;
+      --accent-ink: #F6CDA2;
+      --accent-soft: #3A2A18;
+
+      --accent2: #5FC2D6;
+      --accent2-ink: #BEE9F1;
+      --accent2-soft: #163338;
+
+      --good: #6FBE87;
+      --good-soft: #163726;
+      --caution: #D8B84C;
+      --caution-soft: #372E11;
+      --info: #A6A0DE;
+      --info-soft: #262148;
+
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+
+  :root[data-theme="dark"]{
+    --bg: #0E1A1C;
+    --surface: #142526;
+    --surface-2: #1B2E30;
+    --ink: #E9F1F0;
+    --ink-soft: #9BB3B2;
+    --line: #294143;
+    --line-strong: #3A5457;
+
+    --accent: #E08A46;
+    --accent-ink: #F6CDA2;
+    --accent-soft: #3A2A18;
+
+    --accent2: #5FC2D6;
+    --accent2-ink: #BEE9F1;
+    --accent2-soft: #163338;
+
+    --good: #6FBE87;
+    --good-soft: #163726;
+    --caution: #D8B84C;
+    --caution-soft: #372E11;
+    --info: #A6A0DE;
+    --info-soft: #262148;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ background: var(--bg); }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Public Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family: 'Barlow Semi Condensed', ui-sans-serif, system-ui, sans-serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono{ font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+  a{ color: var(--accent2-ink); text-decoration-color: var(--line-strong); text-underline-offset: 2px; }
+  a:hover{ text-decoration-color: currentColor; }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--accent2); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .masthead::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: .35;
+    mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  }
+  .masthead-inner{
+    position: relative;
+    max-width: 1180px; margin: 0 auto;
+    padding: 40px 24px 28px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+    color: var(--accent-ink); background: var(--accent-soft);
+    padding: 5px 10px; border-radius: 100px;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); flex:none; }
+  h1.title{
+    margin-top: 14px;
+    font-size: clamp(30px, 4.6vw, 46px);
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .subtitle{
+    margin-top: 10px;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+  .meta-row{
+    margin-top: 22px;
+    display:flex; flex-wrap:wrap; gap: 10px 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px; color: var(--ink-soft);
+  }
+  .meta-row b{ color: var(--ink); font-weight: 600; }
+
+  /* ---------- Section shell ---------- */
+  section{ margin-top: 44px; }
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+  .section-head h2{
+    font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color: var(--ink-soft);
+  }
+
+  /* ---------- Insights ---------- */
+  .insights{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .insight{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 16px 14px;
+  }
+  .insight .n{
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:800; font-size: 13px;
+    color: var(--accent-ink);
+    letter-spacing: .04em;
+  }
+  .insight p{ margin: 8px 0 0; font-size: 14px; color: var(--ink); }
+  @media (max-width: 980px){ .insights{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px){ .insights{ grid-template-columns: 1fr; } }
+
+  /* ---------- Feed columns ---------- */
+  .feed-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 36px;
+    position: relative;
+  }
+  .feed-grid::before{
+    content:"";
+    position:absolute; top:0; bottom:0; left:50%;
+    width:1px; background: var(--line);
+  }
+  @media (max-width: 860px){
+    .feed-grid{ grid-template-columns: 1fr; gap: 40px 0; }
+    .feed-grid::before{ display:none; }
+  }
+
+  .region-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 16px;
+  }
+  .region-head .swatch{ width:10px; height:10px; border-radius:2px; flex:none; }
+  .region-head h3{ font-size: 19px; font-weight:700; }
+  .region-head .tag-count{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:12px; color: var(--ink-soft); }
+
+  .card-list{ display:flex; flex-direction:column; gap:12px; }
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--card-accent, var(--line-strong));
+    border-radius: var(--radius);
+    padding: 14px 16px 15px;
+    box-shadow: var(--shadow);
+  }
+  .card-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    flex-wrap: wrap;
+  }
+  .card-org{ font-weight:700; font-size: 15px; color: var(--ink); }
+  .card-date{
+    font-family:'IBM Plex Mono',monospace; font-size: 11.5px; color: var(--ink-soft);
+    white-space: nowrap; padding-top:2px;
+  }
+  .pill{
+    display:inline-block;
+    font-size: 11px; font-weight:600; letter-spacing:.03em;
+    padding: 3px 9px; border-radius: 100px;
+    margin: 7px 0 8px;
+  }
+  .pill.product{ background: var(--accent-soft); color: var(--accent-ink); }
+  .pill.reg{ background: var(--accent2-soft); color: var(--accent2-ink); }
+  .pill.campaign{ background: var(--good-soft); color: var(--good); }
+  .pill.analysis{ background: var(--info-soft); color: var(--info); }
+
+  .card h4{
+    margin: 0 0 5px;
+    font-family:'Public Sans', sans-serif;
+    font-size: 15px; font-weight: 700; color: var(--ink);
+  }
+  .card p{ margin: 0; font-size: 13.7px; color: var(--ink-soft); }
+  .card .src{
+    display:inline-flex; align-items:center; gap:4px;
+    margin-top: 9px; font-size: 12.5px; font-weight:600;
+  }
+  .card .src::after{ content:"→"; transition: transform .15s ease; }
+  .card .src:hover::after{ transform: translateX(2px); }
+
+  /* ---------- Trend panel ---------- */
+  .trend-panel{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px 24px;
+    box-shadow: var(--shadow);
+  }
+  .trend-grid{ display:grid; grid-template-columns: 1.1fr 1fr; gap: 30px; }
+  @media (max-width: 860px){ .trend-grid{ grid-template-columns: 1fr; } }
+
+  .bigstat{ display:flex; align-items:baseline; gap: 14px; flex-wrap:wrap; }
+  .bigstat .num{ font-family:'Barlow Semi Condensed',sans-serif; font-weight:800; font-size: 44px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bigstat .arrow{ color: var(--ink-soft); font-size: 22px; }
+  .bigstat .cagr{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color: var(--good); background: var(--good-soft); padding: 4px 10px; border-radius: 100px;
+  }
+  .trend-panel p.lead{ margin: 10px 0 0; color: var(--ink-soft); font-size: 13.8px; max-width: 46ch; }
+
+  .bars{ display:flex; flex-direction:column; gap: 14px; }
+  .bar-row .bar-label{
+    display:flex; justify-content:space-between; font-size: 12.8px; margin-bottom: 5px;
+  }
+  .bar-row .bar-label b{ font-weight:600; color: var(--ink); }
+  .bar-row .bar-label span{ color: var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
+  .bar-track{ height: 8px; border-radius: 100px; background: var(--surface-2); overflow:hidden; }
+  .bar-fill{ height: 100%; border-radius: 100px; background: var(--accent2); }
+  .bar-fill.alt{ background: var(--accent); }
+
+  .players{
+    margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line);
+    display:flex; flex-wrap:wrap; gap: 8px;
+  }
+  .players .tag{
+    font-family:'IBM Plex Mono',monospace; font-size: 11.5px;
+    border: 1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 4px 9px; border-radius: 6px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top: 52px; padding-top: 20px; border-top: 1px solid var(--line);
+    color: var(--ink-soft); font-size: 12.5px;
+  }
+  footer .foot-grid{ display:flex; justify-content:space-between; gap: 20px; flex-wrap:wrap; }
+  footer a{ color: var(--ink-soft); }
+  .refresh-note{
+    margin-top:18px; padding: 12px 14px;
+    background: var(--surface-2); border-radius: 8px;
+    font-size: 12.8px; color: var(--ink-soft);
+    max-width: 78ch;
+  }
+
+  /* ---------- Archive ---------- */
+  .archive-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .archive-item{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    background: var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding: 10px 14px;
+  }
+  .archive-item .ed{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:600;
+    color: var(--accent-ink); background: var(--accent-soft);
+    padding:2px 8px; border-radius:100px; flex:none;
+  }
+  .archive-item .period{ font-weight:600; font-size:13.8px; color:var(--ink); }
+  .archive-item a{ margin-left:auto; font-size:13px; font-weight:600; white-space:nowrap; }
+  .archive-empty{
+    font-size:13.5px; color:var(--ink-soft); font-style:italic;
+    border:1px dashed var(--line-strong); border-radius:8px; padding:12px 14px;
+  }
+</style>
+</head>
+<body>
+<div id="edition-meta" data-edition="2" data-period-start="2026-09-05" data-period-end="2026-09-11" data-published="2026-09-11" hidden></div>
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="eyebrow"><span class="dot"></span>Perakende Elektrik &middot; Rekabet Takibi</span>
+    <h1 class="title">Piyasa Radarı</h1>
+    <p class="subtitle">Türkiye ve global perakende elektrik tedarikçilerinin yeni ürün, hizmet, tarife ve düzenleme hareketlerinin haftalık özeti</p>
+    <div class="meta-row">
+      <span>DÖNEM &nbsp;<b>5–11 Eylül 2026</b></span>
+      <span>KAPSAM &nbsp;<b>Türkiye + Global öncüler</b></span>
+      <span>İZLENEN GELİŞME &nbsp;<b>10</b></span>
+      <span>YAYIN &nbsp;<b>Sayı 2 · 11 Eyl 2026</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="insights">
+    <div class="section-head">
+      <h2>Bu Haftanın Çıkarımları</h2>
+    </div>
+    <div class="insights">
+      <div class="insight"><div class="n">01 — ESNEKLİK = SADAKAT</div><p>EDF Flextras, müşteri sadakatini doğrudan yük kaydırma davranışına bağladı. Ücretsiz saat, puan veya ödül mekanizmasının şebeke esnekliğiyle birleşmesi perakendede yeni bağlılık modeli oluşturuyor.</p></div>
+      <div class="insight"><div class="n">02 — TEDARİK + EV AYRIŞMIYOR</div><p>Iberdrola'nın 12 bin şarj noktası, E.ON'un tüm eve uygulanan gece EV fiyatı ve En Yakıt'ın Türkiye genişlemesi; mobilitenin perakende teklifinin çekirdek parçasına dönüştüğünü gösteriyor.</p></div>
+      <div class="insight"><div class="n">03 — KONSOLİDASYON HIZLANIYOR</div><p>EDF'nin So Energy görüşmeleri, müşteri portföyünün yanında güneş kurulumu gibi ev enerji yetkinliklerinin de satın alma hedefi haline geldiğini gösteriyor.</p></div>
+      <div class="insight"><div class="n">04 — TÜRKİYE'DE REGÜLASYON + DİJİTAL TAHSİLAT</div><p>EPDK'nın yeni tedarik lisansları rekabet tabanını genişletirken Enerjisa kampanyası müşteri ilişkisinde otomatik ödeme ve dijital kanal kullanımını öne çıkarıyor.</p></div>
+    </div>
+  </section>
+
+  <section id="feed">
+    <div class="section-head">
+      <h2>Şirket ve Kurum Hareketleri</h2>
+      <span class="count">10 kayıt &middot; en yeniden eskiye</span>
+    </div>
+
+    <div class="feed-grid">
+      <div class="feed-col">
+        <div class="region-head">
+          <span class="swatch" style="background:var(--accent)"></span>
+          <h3>Türkiye</h3>
+          <span class="tag-count">4 kayıt</span>
+        </div>
+        <div class="card-list">
+
+          <div class="card" style="--card-accent:var(--accent2)">
+            <div class="card-top"><span class="card-org">EPDK</span><span class="card-date mono">6 Eyl 2026</span></div>
+            <span class="pill reg">Düzenleme</span>
+            <h4>Elektrik piyasasında 3 yeni tedarik lisansı verildi</h4>
+            <p>EPDK'nin Resmî Gazete'de yayımlanan kararlarında elektrik piyasası için 29 üretim ve 3 tedarik lisansı verildi; ayrıca 3 şarj ağı işletmeci lisansı sona erdirildi. Perakende tarafta yeni oyuncu girişi ve şarj ağı konsolidasyonu birlikte izlenmeli.</p>
+            <a class="src" href="https://www.aa.com.tr/tr/enerjiterminali/genel/epdk-elektrik-ve-petrol-piyasalarinda-34-lisans-verdi/59443" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--accent2)">
+            <div class="card-top"><span class="card-org">EPDK</span><span class="card-date mono">5 Eyl 2026</span></div>
+            <span class="pill reg">Düzenleme</span>
+            <h4>Dağıtım şirketlerinin AR-GE / ÜR-GE kuralları güncellendi</h4>
+            <p>EPDK, elektrik dağıtım şirketlerinin AR-GE bütçelerinden karşılanabilecek giderleri ve ÜR-GE başvuru süreçlerini yeniden tanımladı. Dijital platform, siber güvenlik testi, pilot uygulama, yerlileştirme ve ticarileştirme öncesi çalışmalar daha açık biçimde kapsama alındı.</p>
+            <a class="src" href="https://www.aa.com.tr/tr/enerjiterminali/elektrik/epdk-dogal-gaz-ve-elektrik-dagitim-sirketlerinin-ar-ge-ve-ur-ge-faaliyetlerinde-degisiklige-gitti/59428" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--good)">
+            <div class="card-top"><span class="card-org">Enerjisa</span><span class="card-date mono">1–23 Eyl 2026</span></div>
+            <span class="pill campaign">Kampanya</span>
+            <h4>Akbank iş birliğiyle otomatik ödemeye 750 TL chip-para</h4>
+            <p>Enerjisa müşterileri Akbank Mobil üzerinden 'ENERJISA' koduyla otomatik ödeme talimatı verip ilk faturanın ödenmesi sonrasında 750 TL chip-para kazanabiliyor. Kampanya, fatura ödeme davranışını dijital ve otomatik kanala çekmeye odaklanıyor.</p>
+            <a class="src" href="https://www.enerjisa.com.tr/tr/musteri-islemleri/kampanyalar/akbank-mobilden-otomatik-odeme-talimati-vererek-750-tl-chip-para-kazanin" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--accent)">
+            <div class="card-top"><span class="card-org">En Yakıt</span><span class="card-date mono">7 Eyl 2026</span></div>
+            <span class="pill product">Yeni Ürün/Hizmet</span>
+            <h4>Eylülde 18 yeni şarj noktası devreye alındı</h4>
+            <p>Şirket İstanbul, Ankara, İzmir, Antalya, Adana ve Muğla'da toplam 18 yeni şarj noktasını hizmete açtı. Perakende elektrik teklifleri ile mobilite hizmetlerinin yakınsamasını Türkiye'de hızlandıran somut bir altyapı genişlemesi.</p>
+            <a class="src" href="https://www.petroturk.com/elektrik-haberleri/en-yakit-eylulde-18-yeni-sarj-noktasini-hizmete-aldi" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="feed-col">
+        <div class="region-head">
+          <span class="swatch" style="background:var(--accent2)"></span>
+          <h3>Global</h3>
+          <span class="tag-count">6 kayıt</span>
+        </div>
+        <div class="card-list">
+
+          <div class="card" style="--card-accent:var(--accent)">
+            <div class="card-top"><span class="card-org">EDF Energy · UK</span><span class="card-date mono">7 Eyl 2026</span></div>
+            <span class="pill product">Yeni Ürün/Hizmet</span>
+            <h4>Flextras: tüketim esnekliğini sadakat programına çevirdi</h4>
+            <p>EDF'nin yeni Flextras programı, uygulama içinde Weekend Saver ile müşterileri hafta içi 16:00–19:00 zirve saatlerinden tüketim kaydırmaya teşvik ediyor. Katılımcılar ayda 25 saate kadar ücretsiz elektrik ve ek sadakat avantajları kazanabiliyor.</p>
+            <a class="src" href="https://www.edfenergy.com/media-centre/edf-gives-customers-extra-launch-loyalty-scheme-flextras" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--info)">
+            <div class="card-top"><span class="card-org">EDF / So Energy · UK</span><span class="card-date mono">7 Eyl 2026</span></div>
+            <span class="pill analysis">Pazar Analizi</span>
+            <h4>EDF, So Energy'yi satın almak için görüşüyor</h4>
+            <p>Reuters'a göre EDF, yaklaşık 300 bin müşterili So Energy'yi satın almak için görüşmeler yürütüyor. Olası işlem EDF'nin yaklaşık 5 milyon müşterilik Britanya tabanını büyütürken So Energy'nin güneş kurulumu yetkinliğini de bünyesine katabilir.</p>
+            <a class="src" href="https://www.reuters.com/business/energy/frances-edf-talks-buy-so-energy-expand-british-customer-base-2026-09-07/" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--accent)">
+            <div class="card-top"><span class="card-org">Iberdrola España</span><span class="card-date mono">9 Eyl 2026</span></div>
+            <span class="pill product">Yeni Ürün/Hizmet</span>
+            <h4>EV şarj ağı 12 bin aktif noktaya ulaştı</h4>
+            <p>Iberdrola España, kendi ağı ve bp pulse ortaklığıyla 12 bin aktif şarj noktasına ulaştığını; son 12 ayda 2 bin yeni nokta eklediğini açıkladı. Şirket 2026'da 4 milyon şarj işlemini aşmayı bekliyor.</p>
+            <a class="src" href="https://www.iberdrolaespana.com/sala-comunicacion/noticias/viajes-largos-vehiculos-electricos-realidad-espana" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--good)">
+            <div class="card-top"><span class="card-org">ENGIE · Fransa</span><span class="card-date mono">1 Eyl 2026</span></div>
+            <span class="pill campaign">Kampanya</span>
+            <h4>Eylül tarifelerinde yeni müşteri promosyonu ve güncel fiyat görünümü</h4>
+            <p>ENGIE'nin eylül görünümünde düzenlenmiş elektrik tarifesi baz seçenekte €0,2001/kWh seviyesinde; 24 Ağustos–20 Eylül döneminde Elec Référence 3 ans için €50, elektrik+gaz paketinde €120 promosyon sunuluyor.</p>
+            <a class="src" href="https://particuliers.engie.fr/electricite/conseils-electricite/conseils-tarifs-electricite/prix-elec-trve-engie.html" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--info)">
+            <div class="card-top"><span class="card-org">Dağıtık enerji trendi</span><span class="card-date mono">7 Eyl 2026</span></div>
+            <span class="pill analysis">Pazar Analizi</span>
+            <h4>Ev güneşi + batarya, VPP modelini ana akıma taşıyor</h4>
+            <p>Reuters analizi, yeni ABD konut güneşi kurulumlarında batarya eşleşme oranının 2025'te %37'ye çıktığını ve Sunrun'da %70'e ulaştığını aktarıyor. Evler yalnız tüketici değil, depolama ve VPP üzerinden piyasa katılımcısı haline geliyor.</p>
+            <a class="src" href="https://www.reuters.com/business/energy/investor-view-home-solar-with-storage-could-slow-power-price-supercycle--reeii-2026-09-07/" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+          <div class="card" style="--card-accent:var(--accent)">
+            <div class="card-top"><span class="card-org">E.ON Next · UK</span><span class="card-date mono">3 Eyl 2026</span></div>
+            <span class="pill product">Yeni Ürün/Hizmet</span>
+            <h4>Next Drive Smart: gece EV ve tüm ev için 6,9p/kWh</h4>
+            <p>E.ON Next'in güncel EV tarifesinde 00:00–07:00 arasında 6,9p/kWh düşük fiyat hem araç şarjına hem tüm ev tüketimine uygulanıyor. Şirket tipik EV kullanıcısı için standart değişken tarifeye kıyasla yılda yaklaşık £462 tasarruf hesaplıyor.</p>
+            <a class="src" href="https://www.eonnext.com/tariffs/next-drive/smart" target="_blank" rel="noopener">Kaynak</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trend">
+    <div class="section-head">
+      <h2>Pazar Görünümü — 2026-2031</h2>
+    </div>
+    <div class="trend-panel">
+      <div class="trend-grid">
+        <div>
+          <div class="bigstat">
+            <span class="num">$3,19T</span>
+            <span class="arrow">→</span>
+            <span class="num">$4,04T</span>
+            <span class="cagr">YBBO %4,86</span>
+          </div>
+          <p class="lead">Küresel perakende elektrik pazarı için önceki sayıda kullanılan 2026–2031 tahmini ($3,19T → $4,04T; YBBO %4,86) bu hafta yeni karşılaştırılabilir pazar raporu bulunmadığı için değişmeden korunmuştur. Buna karşılık Reuters'ın 7 Eylül analizi, konut güneşi + batarya eşleşmesinin hızlandığını ve VPP modelinin perakende müşteri teklifine yaklaştığını gösteriyor. <i>Rakamlar bu hafta değişmedi.</i></p>
+          <div class="players">
+            <span class="tag">State Grid</span>
+            <span class="tag">Enel</span>
+            <span class="tag">EDF</span>
+            <span class="tag">E.ON</span>
+            <span class="tag">Iberdrola</span>
+            <span class="tag">Duke Energy</span>
+            <span class="tag">Xcel Energy</span>
+            <span class="tag">NextEra</span>
+            <span class="tag">Octopus Energy</span>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="bar-row">
+            <div class="bar-label"><b>Sabit/düz tarife payı (2025)</b><span>%44,6</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:44.6%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>Yeşil/yenilenebilir tarife büyümesi</b><span>YBBO %7,38</span></div>
+            <div class="bar-track"><div class="bar-fill alt" style="width:74%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>UK'de zamana-duyarlı tarifeyi bilen hane (2025)</b><span>%90</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>Teksas VPP pilotunda batarya ile fatura tasarrufu</b><span>%40</span></div>
+            <div class="bar-track"><div class="bar-fill alt" style="width:40%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="archive">
+    <div class="section-head">
+      <h2>Önceki Sayılar</h2>
+      <span class="count">1 arşiv sayı · 2 sayı toplam</span>
+    </div>
+    <ul id="archive-list" class="archive-list">
+      <li class="archive-item"><span class="ed">Sayı 1</span><span class="period">25–31 Ağustos 2026</span><a href="archive/sayi-1.html" target="_blank" rel="noopener">Görüntüle</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="refresh-note">
+      Bu sayı 5–11 Eylül 2026 dönemindeki doğrulanabilir gelişmelerden derlenmiştir. Son 7 günde yeterli yeni haber bulunmayan izleme listesindeki şirketler için eski kartlar tekrar edilmemiştir. Pazar Görünümü ana büyüklük tahmini yeni karşılaştırılabilir rapor bulunmadığından önceki sayıdan korunmuştur.
+    </div>
+    <div class="foot-grid" style="margin-top:16px;">
+      <span>Kaynaklar: EPDK/AA Enerji Terminali, Enerjisa, Petroturk, EDF Energy, Reuters, Iberdrola España, ENGIE, E.ON Next</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
